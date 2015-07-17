@@ -1,3 +1,3 @@
 [Live Link][livelink]
 
-[livelink]: ougarcia.github.io/asteroids
+[livelink]: http://ougarcia.github.io/asteroids
