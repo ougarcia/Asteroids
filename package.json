@@ -1,0 +1,24 @@
+{
+  "name": "asteroids",
+  "version": "1.0.0",
+  "description": "An asteroids javascript game writting in es6 and transpiled using babel and webpack",
+  "main": "index.html",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ougarcia/Asteroids.git"
+  },
+  "author": "ougarcia",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/ougarcia/Asteroids/issues"
+  },
+  "homepage": "https://github.com/ougarcia/Asteroids#readme",
+  "devDependencies": {
+    "babel-core": "^5.8.22",
+    "babel-loader": "^5.3.2",
+    "webpack": "^1.11.0"
+  }
+}
