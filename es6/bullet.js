@@ -9,9 +9,6 @@ class Bullet extends MovingObject {
     this.RADIUS = params.radius;
     this.isWrappable = false;
   }
-  isWrappable() {
-    return true;
-  }
 }
 
 export default Bullet;

@@ -7,6 +7,7 @@ class Asteroid extends MovingObject {
     params['radius'] = params.radius || 40;
     params['vel'] = Util.randomVec(Math.floor(Math.random() * 3 + 1));
     super(params);
+    this.RADIUS = params.radius;
   }
   spawnChildren() {
     var params = {};
