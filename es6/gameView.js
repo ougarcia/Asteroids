@@ -9,19 +9,18 @@ class GameView {
   }
   start() {
     this.bindKeyHandlers();
-    window.setInterval((function() {
+    window.setInterval(() => {
       this.game.step();
       this.checkKeys();
       this.game.draw();
-    }).bind(this), 10 );
+    }, 10 );
   }
   bindKeyHandlers() {
-    window.key('up, down, space, left, right', function () {
-      return false;
-    });
+    // this is to disable the default action for the kys used in the game
+    window.key('up, down, space, left, right', () => false );
   }
   checkKeys() {
-    var ship = this.game.ship;
+    const ship = this.game.ship;
     if (!ship) {
       return;
     }

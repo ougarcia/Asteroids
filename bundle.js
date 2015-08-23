@@ -92,16 +92,19 @@
 	  _createClass(GameView, [{
 	    key: 'start',
 	    value: function start() {
+	      var _this = this;
+
 	      this.bindKeyHandlers();
-	      window.setInterval((function () {
-	        this.game.step();
-	        this.checkKeys();
-	        this.game.draw();
-	      }).bind(this), 10);
+	      window.setInterval(function () {
+	        _this.game.step();
+	        _this.checkKeys();
+	        _this.game.draw();
+	      }, 10);
 	    }
 	  }, {
 	    key: 'bindKeyHandlers',
 	    value: function bindKeyHandlers() {
+	      // this is to disable the default action for the kys used in the game
 	      window.key('up, down, space, left, right', function () {
 	        return false;
 	      });
@@ -141,11 +144,9 @@
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
 
+	function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr2 = Array(arr.length); i < arr.length; i++) arr2[i] = arr[i]; return arr2; } else { return Array.from(arr); } }
+
 	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } }
-
-	var _bullet = __webpack_require__(3);
-
-	var _bullet2 = _interopRequireDefault(_bullet);
 
 	var _asteroid = __webpack_require__(6);
 
@@ -154,8 +155,6 @@
 	var _ship = __webpack_require__(7);
 
 	var _ship2 = _interopRequireDefault(_ship);
-
-	// temporarily not adding asteroids and ships
 
 	var Game = (function () {
 	  function Game(xDim, yDim) {
@@ -185,79 +184,77 @@
 	    key: 'addAsteroids',
 	    value: function addAsteroids() {
 	      var position1 = this.randomPosition();
-	      // TODO: why do i need position 2 and 3 here?
-	      var position2 = this.randomPosition();
-	      var position3 = this.randomPosition();
-	      this.asteroids.push(_asteroid2['default'].newBigAsteroid({ "pos": position1 }));
+	      this.asteroids.push(_asteroid2['default'].newBigAsteroid({ 'pos': position1 }));
 	    }
 	  }, {
 	    key: 'addShip',
 	    value: function addShip() {
 	      var position = this.randomPosition();
-	      this.ship = new _ship2['default']({ "pos": position });
+	      this.ship = new _ship2['default']({ 'pos': position });
 	    }
 	  }, {
 	    key: 'allObjects',
 	    value: function allObjects() {
-	      var allObjectsArray = this.asteroids.slice(0);
-	      this.ship && allObjectsArray.unshift(this.ship);
-	      allObjectsArray = allObjectsArray.concat(this.bullets);
-	      return allObjectsArray;
+	      var allObjectsArr = [].concat(_toConsumableArray(this.asteroids), _toConsumableArray(this.bullets));
+	      if (this.ship) allObjectsArr.unshift(this.ship);
+	      return allObjectsArr;
 	    }
 	  }, {
 	    key: 'draw',
 	    value: function draw() {
+	      var _this = this;
+
 	      this.ctx.clearRect(0, 0, this.DIM_X, this.DIM_Y);
 	      this.drawLives();
-	      this.allObjects().forEach((function (object) {
-	        object.draw(this.ctx);
-	      }).bind(this));
+	      this.allObjects().forEach(function (object) {
+	        return object.draw(_this.ctx);
+	      });
 	    }
 	  }, {
 	    key: 'drawLives',
 	    value: function drawLives() {
-	      this.ctx.fillStyle = "Black";
-	      this.ctx.font = "48px serif";
-	      this.ctx.fillText(this.lives + " lives", 0, 50);
+	      this.ctx.fillStyle = 'Black';
+	      this.ctx.font = '48px serif';
+	      this.ctx.fillText(this.lives + ' lives', 0, 50);
 	    }
 	  }, {
 	    key: 'moveObjects',
 	    value: function moveObjects() {
 	      this.allObjects().forEach(function (object) {
-	        object.move();
+	        return object.move();
 	      });
 	    }
 	  }, {
 	    key: 'wrap',
 	    value: function wrap(pos, object) {
-	      //TODO remove object from dom and instance variables if it's outside the DOM
-	      if (object.isWrappable) {
-	        for (var i = 0; i < 2; i++) {
-	          if (pos[i] > window.Asteroids.dims[i]) {
-	            pos[i] = pos[i] % window.Asteroids.dims[i];
-	          } else if (pos[i] < 0) {
-	            pos[i] = window.Asteroids.dims[i] - pos[i];
-	          }
+	      // TODO: if not wrappable then remove;
+	      if (!object.isWrappable) return pos;
+
+	      [0, 1].forEach(function (i) {
+	        if (pos[i] > window.Asteroids.dims[i]) {
+	          pos[i] = pos[i] % window.Asteroids.dims[i];
+	        } else if (pos[i] < 0) {
+	          pos[i] = window.Asteroids.dims[i] - pos[i];
 	        }
-	      }
+	      });
 	      return pos;
 	    }
 	  }, {
 	    key: 'checkCollisions',
 	    value: function checkCollisions() {
-	      var that = this;
+	      var _this2 = this;
+
+	      // might want to use for of instead of forEach
 	      this.bullets.forEach(function (bullet) {
-	        that.asteroids.forEach(function (asteroid) {
+	        _this2.asteroids.forEach(function (asteroid) {
 	          if (bullet.isCollidedWith(asteroid)) {
-	            that.removeBullet(bullet);
-	            that.removeAsteroid(asteroid);
+	            _this2.removeBullet(bullet);
+	            _this2.removeAsteroid(asteroid);
 	          }
 	        });
 	      });
 	      this.asteroids.forEach(function (asteroid) {
-	        if (!!that.ship && that.ship.isCollidedWith(asteroid)) {
-	          that.resetShip();
-	        }
+	        if (!!_this2.ship && _this2.ship.isCollidedWith(asteroid)) _this2.resetShip();
 	      });
 	    }
 	  }, {
