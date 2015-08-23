@@ -7,6 +7,7 @@ class Bullet extends MovingObject {
     super(params);
     this.COLOR = params.color;
     this.RADIUS = params.radius;
+    this.isWrappable = false;
   }
   isWrappable() {
     return true;
