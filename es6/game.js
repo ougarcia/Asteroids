@@ -42,7 +42,7 @@ class Game {
   drawLives() {
     this.ctx.fillStyle = 'Black';
     this.ctx.font = '48px serif';
-    this.ctx.fillText(this.lives + ' lives', 0, 50);
+    this.ctx.fillText(`${this.lives} lives`, 0, 50);
   }
   moveObjects() {
     this.allObjects().forEach( object => object.move() );

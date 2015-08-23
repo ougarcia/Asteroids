@@ -335,42 +335,31 @@
 
 /***/ },
 /* 4 */
-/***/ function(module, exports, __webpack_require__) {
+/***/ function(module, exports) {
 
-	'use strict';
+	"use strict";
 
-	Object.defineProperty(exports, '__esModule', {
+	Object.defineProperty(exports, "__esModule", {
 	  value: true
 	});
 
-	var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ('value' in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
+	var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
 
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
-
-	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } }
-
-	var _utilJs = __webpack_require__(5);
-
-	var _utilJs2 = _interopRequireDefault(_utilJs);
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 	var MovingObject = (function () {
 	  function MovingObject(params) {
 	    _classCallCheck(this, MovingObject);
 
-	    this.pos = params['pos'];
-	    this.vel = params['vel'];
-	    this.radius = params['radius'];
-	    this.color = params['color'];
+	    this.pos = params.pos;
+	    this.vel = params.vel;
+	    this.radius = params.radius;
+	    this.color = params.color;
 	    this.isWrappable = true;
 	  }
 
 	  _createClass(MovingObject, [{
-	    key: 'isWrappable',
-	    value: function isWrappable() {
-	      return true;
-	    }
-	  }, {
-	    key: 'draw',
+	    key: "draw",
 	    value: function draw() {
 	      var ctx = window.Asteroids.ctx;
 	      ctx.fillStyle = this.color;
@@ -381,7 +370,7 @@
 	      ctx.fill();
 	    }
 	  }, {
-	    key: 'move',
+	    key: "move",
 	    value: function move() {
 	      var newPosition = [];
 	      for (var i = 0; i < 2; i++) {
@@ -391,33 +380,28 @@
 	      this.pos = window.Asteroids.currentGame.wrap(newPosition, this);
 	    }
 	  }, {
-	    key: 'isCollidedWith',
+	    key: "isCollidedWith",
 	    value: function isCollidedWith(otherObject) {
-	      var posDif = 0;
-	      for (var i = 0; i < 2; i++) {
-	        posDif += Math.pow(this.pos[i] - otherObject.pos[i], 2);
-	      }
-	      posDif = Math.sqrt(posDif);
-	      if (posDif < this.radius + otherObject.radius) {
-	        return true;
-	      }
-	      return false;
-	    }
-	  }, {
-	    key: 'collidedWith',
-	    value: function collidedWith(otherObject) {
-	      // this might not be necessary
-	      if (this instanceof Asteroids.Bullet && otherObject instanceof Asteroids.Asteroid) {
-	        Asteroids.currentGame.removeAsteroid(otherObject);
-	      }
+	      var _this = this;
+
+	      // find vector from center of this object to center of other object
+	      var vectDif = [0, 1].map(function (i) {
+	        return _this.pos[i] - otherObject.pos[i];
+	      });
+	      // find that vector's magnitude
+	      var magDif = Math.sqrt(vectDif.reduce(function (total, el) {
+	        return total + Math.pow(el, 2);
+	      }, 0));
+
+	      return magDif < this.radius + otherObject.radius ? true : false;
 	    }
 	  }]);
 
 	  return MovingObject;
 	})();
 
-	exports['default'] = MovingObject;
-	module.exports = exports['default'];
+	exports["default"] = MovingObject;
+	module.exports = exports["default"];
 
 /***/ },
 /* 5 */

@@ -1,18 +1,14 @@
-import Util from './util.js';
 
 class MovingObject {
   constructor(params) {
-    this.pos = params['pos'];
-    this.vel = params['vel'];
-    this.radius = params['radius'];
-    this.color = params['color'];
+    this.pos = params.pos;
+    this.vel = params.vel;
+    this.radius = params.radius;
+    this.color = params.color;
     this.isWrappable = true;
   }
-  isWrappable() {
-    return true;
-  }
-  draw () {
-    var ctx = window.Asteroids.ctx;
+  draw() {
+    const ctx = window.Asteroids.ctx;
     ctx.fillStyle = this.color;
     ctx.beginPath();
 
@@ -28,30 +24,22 @@ class MovingObject {
     ctx.fill();
   }
   move() {
-    var newPosition = [];
-    for (var i = 0; i < 2; i++) {
+    const newPosition = [];
+    for (let i = 0; i < 2; i++) {
       newPosition[i] = this.pos[i] + this.vel[i];
     }
 
     this.pos = window.Asteroids.currentGame.wrap(newPosition, this);
   }
   isCollidedWith(otherObject) {
-    var posDif = 0;
-    for (var i = 0; i < 2; i++){
-      posDif += Math.pow((this.pos[i] - otherObject.pos[i]), 2);
-    }
-    posDif = Math.sqrt(posDif);
-    if (posDif < (this.radius + otherObject.radius)) {
-      return true;
-    }
-    return false;
-  }
-  collidedWith(otherObject) {
-    // this might not be necessary
-    if (this instanceof Asteroids.Bullet &&
-          otherObject instanceof Asteroids.Asteroid) {
-      Asteroids.currentGame.removeAsteroid(otherObject);
-    }
+    // find vector from center of this object to center of other object
+    const vectDif = [0, 1].map( i => this.pos[i] - otherObject.pos[i] );
+    // find that vector's magnitude
+    const magDif = Math.sqrt( vectDif.reduce( (total, el) => {
+      return total + Math.pow(el, 2);
+    }, 0 ));
+
+    return magDif < (this.radius + otherObject.radius) ? true : false;
   }
 }
 
