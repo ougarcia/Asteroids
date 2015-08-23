@@ -1,20 +1,22 @@
+import Util from './util';
 import MovingObject from './movingObject';
+import Bullet from './bullet';
 
 class Ship extends MovingObject {
   constructor(params) {
+    params['color'] = 'red';
+    params['radius'] = 10;
+    params['vel'] = [0, 0];
+    super(params);
     this.bulletAvailable = true;
     this.rotation = 0;
     this.decelerationCounter = 0;
-    this.COLOR = 'red';
-    this.RADIUS = 10;
-    params['color'] = this.COLOR;
-    params['radius'] = this.RADIUS;
-    params['vel'] = [0, 0];
-    super(params);
-    //window.Asteroids.MovingObject.call(this, params);
+    // FIXME: these upper case instance variables may be redundant and redundant
+    this.COLOR = params.color;
+    this.RADIUS = params.radius;
   }
   power(impulse) {
-    if ( Asteroids.Util.norm(this.vel) < 4 ) {
+    if ( Util.norm(this.vel) < 4 ) {
       this.vel.forEach(function(subVel, idx) {
         this.vel[idx] +=  impulse[idx] * 0.1;
       }.bind(this));
@@ -38,11 +40,11 @@ class Ship extends MovingObject {
   }
   fireBullet() {
     var that = this;
-    var velocity = Asteroids.Util.unitVector(this.velocityVector());
+    var velocity = Util.unitVector(this.velocityVector());
     velocity[0] *= 11;
     velocity[1] *= 11;
-    var bullet = new Asteroids.Bullet({ pos: this.pos, vel: velocity });
-    Asteroids.currentGame.bullets.push(bullet);
+    var bullet = new Bullet({ pos: this.pos, vel: velocity });
+    window.Asteroids.currentGame.bullets.push(bullet);
     this.bulletAvailable = false;
     setTimeout(function() {
       that.bulletAvailable = true;
@@ -74,7 +76,7 @@ class Ship extends MovingObject {
       this.decelerationCounter = 0;
       this.decelerate();
     }
-    Asteroids.MovingObject.prototype.move.call(this);
+    super.move();
   }
   decelerate() {
     this.vel.forEach(function(subVel, idx) {
@@ -82,3 +84,4 @@ class Ship extends MovingObject {
     }.bind(this));
   }
 }
+export default Ship;

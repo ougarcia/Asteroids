@@ -1,6 +1,6 @@
-//import Bullet from './bullet';
+import Bullet from './bullet';
 import Asteroid from './asteroid';
-//import Ship from './ship';
+import Ship from './ship';
 // temporarily not adding asteroids and ships
 
 class Game {
@@ -15,7 +15,7 @@ class Game {
     for(var i = 0; i < this.NUM_ASTEROIDS; i++) {
       this.addAsteroids();
     }
-    //this.addShip();
+    this.addShip();
   }
   randomPosition() {
     var x = Math.floor(Math.random() * this.DIM_X);
@@ -31,12 +31,12 @@ class Game {
   }
   addShip() {
     var position = this.randomPosition();
-    this.ship = new Asteroids.Ship({ "pos": position });
+    this.ship = new Ship({ "pos": position });
   }
   allObjects() {
     var allObjectsArray = this.asteroids.slice(0);
-    //this.ship && allObjectsArray.unshift(this.ship);
-    //allObjectsArray = allObjectsArray.concat(this.bullets);
+    this.ship && allObjectsArray.unshift(this.ship);
+    allObjectsArray = allObjectsArray.concat(this.bullets);
     return allObjectsArray;
   }
 

@@ -2,11 +2,11 @@ import MovingObject from './movingObject';
 
 class Bullet extends MovingObject {
   constructor(params) {
-    this.COLOR = 'red';
-    this.RADIUS = 6;
-    params['color'] = this.COLOR;
-    params['radius'] = this.RADIUS;
-    window.Asteroids.MovingObject.call(this, params);
+    params['color'] = 'red';
+    params['radius'] = 6;
+    super(params);
+    this.COLOR = params.color;
+    this.RADIUS = params.radius;
   }
   isWrappable() {
     return true;

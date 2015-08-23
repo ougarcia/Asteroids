@@ -16,7 +16,7 @@ class Util {
 
   static unitVector(vector) {
     var result = [];
-    var norm = Asteroids.Util.norm(vector);
+    var norm = Util.norm(vector);
     vector.forEach(function(el) {
       result.push(el / norm);
     });

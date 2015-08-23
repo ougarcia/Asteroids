@@ -1,6 +1,6 @@
 import Util from './util.js';
 
-class MovingObject {  
+class MovingObject {
   constructor(params) {
     this.pos = params['pos'];
     this.vel = params['vel'];
