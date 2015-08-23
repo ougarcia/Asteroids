@@ -1,48 +1,37 @@
-(function () {
-  if (typeof window.Asteroids === "undefined") {
-    window.Asteroids = {};
+import Util from './util';
+import MovingObject from './movingObject';
+
+class Asteroid extends MovingObject {
+  constructor(params) {
+    params['color'] = 'blue';
+    params['radius'] = params.radius || 40;
+    params['vel'] = Util.randomVec(Math.floor(Math.random() * 3 + 1));
+    super(params);
   }
-
-  var Asteroid = window.Asteroids.Asteroid = function (params) {
-    this.COLOR = 'blue';
-    this.RADIUS = params.radius || 40;
-    params['color'] = this.COLOR;
-    params['radius'] = this.RADIUS;
-    params['vel'] = window.Asteroids.Util.randomVec(
-      Math.floor(Math.random() * 3 + 1)
-    );
-    window.Asteroids.MovingObject.call(this, params);
-  };
-
-  window.Asteroids.Util.inherits(Asteroid, Asteroids.MovingObject);
-
-  Asteroid.prototype.spawnChildren = function () {
+  spawnChildren() {
     var params = {};
     params.pos = this.pos;
     params.radius = this.RADIUS - 20;
     var newAsteroids = [];
     if (params.radius > 0 ) {
       for (var i = 0; i < 2; i++) {
-        newAsteroids.push(new Asteroids.Asteroid(params));
+        newAsteroids.push(new Asteroid(params));
       }
     }
     return newAsteroids;
-  };
-
-  Asteroids.Asteroid.newBigAsteroid = function(params) {
+  }
+  static newBigAsteroid(params) {
     params.radius = 60;
-    return new Asteroids.Asteroid(params);
-  };
-
-  Asteroids.Asteroid.newMediumAsteroid = function(params) {
+    return new Asteroid(params);
+  }
+  static newMediumAsteroid(params) {
     params.radius = 40;
-    return new Asteroids.Asteroid(params);
-  };
-
-
-  Asteroids.Asteroid.newSmallAsteroid = function(params) {
+    return new Asteroid(params);
+  }
+  static newSmallAsteroid(params) {
     params.radius = 20;
-    return new Asteroids.Asteroid(params);
-  };
+    return new Asteroid(params);
+  }
+}
 
-})();
+export default Asteroid;

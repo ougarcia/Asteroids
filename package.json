@@ -4,7 +4,8 @@
   "description": "An asteroids javascript game writting in es6 and transpiled using babel and webpack",
   "main": "index.html",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "compile": "webpack"
   },
   "repository": {
     "type": "git",

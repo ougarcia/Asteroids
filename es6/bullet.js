@@ -1,17 +1,16 @@
-(function() {
-  if (typeof window.Asteroids === "undefined" ) {
-    window.Asteroids = {};
-  }
+import MovingObject from './movingObject';
 
-  var Bullet = window.Asteroids.Bullet = function(params) {
+class Bullet extends MovingObject {
+  constructor(params) {
     this.COLOR = 'red';
     this.RADIUS = 6;
     params['color'] = this.COLOR;
     params['radius'] = this.RADIUS;
     window.Asteroids.MovingObject.call(this, params);
-  };
+  }
+  isWrappable() {
+    return true;
+  }
+}
 
-  window.Asteroids.Util.inherits(Bullet, Asteroids.MovingObject);
-
-  Bullet.prototype.isWrappable = false;
-})();
+export default Bullet;

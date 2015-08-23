@@ -1,18 +1,17 @@
-(function () {
-  if (typeof window.Asteroids === 'undefined') {
-    window.Asteroids = {};
-  }
+import Util from './util.js';
 
-  var MovingObject = window.Asteroids.MovingObject = function(params) {
+class MovingObject {  
+  constructor(params) {
     this.pos = params['pos'];
     this.vel = params['vel'];
     this.radius = params['radius'];
     this.color = params['color'];
-  };
-
-  MovingObject.prototype.isWrappable = true;
-
-  MovingObject.prototype.draw = function() {
+    this.isWrappable = true;
+  }
+  isWrappable() {
+    return true;
+  }
+  draw () {
     var ctx = window.Asteroids.ctx;
     ctx.fillStyle = this.color;
     ctx.beginPath();
@@ -27,19 +26,16 @@
     );
 
     ctx.fill();
-  };
-
-  MovingObject.prototype.move = function () {
+  }
+  move() {
     var newPosition = [];
     for (var i = 0; i < 2; i++) {
       newPosition[i] = this.pos[i] + this.vel[i];
     }
 
-    this.pos = window.Asteroids.Game.wrap(newPosition, this);
-  };
-
-
-  MovingObject.prototype.isCollidedWith = function(otherObject) {
+    this.pos = window.Asteroids.currentGame.wrap(newPosition, this);
+  }
+  isCollidedWith(otherObject) {
     var posDif = 0;
     for (var i = 0; i < 2; i++){
       posDif += Math.pow((this.pos[i] - otherObject.pos[i]), 2);
@@ -49,13 +45,14 @@
       return true;
     }
     return false;
-  };
-
-  MovingObject.prototype.collideWith = function(otherObject) {
+  }
+  collidedWith(otherObject) {
     // this might not be necessary
     if (this instanceof Asteroids.Bullet &&
           otherObject instanceof Asteroids.Asteroid) {
       Asteroids.currentGame.removeAsteroid(otherObject);
     }
-  };
-})();
+  }
+}
+
+export default MovingObject;

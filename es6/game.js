@@ -1,11 +1,12 @@
-import Bullet from './bullet';
+//import Bullet from './bullet';
 import Asteroid from './asteroid';
-import Ship from './ship';
+//import Ship from './ship';
+// temporarily not adding asteroids and ships
 
 class Game {
   constructor(xDim, yDim) {
     this.ctx = window.Asteroids.ctx;
-    this.NUM_ASTEROIDS = 4;
+    this.NUM_ASTEROIDS = 3;
     this.lives = 3;
     this.DIM_X = xDim;
     this.DIM_Y = yDim;
@@ -14,18 +15,19 @@ class Game {
     for(var i = 0; i < this.NUM_ASTEROIDS; i++) {
       this.addAsteroids();
     }
-    this.addShip();
+    //this.addShip();
   }
-  randomPostion() {
+  randomPosition() {
     var x = Math.floor(Math.random() * this.DIM_X);
     var y = Math.floor(Math.random() * this.DIM_Y);
     return [x, y];
   }
   addAsteroids() {
     var position1 = this.randomPosition();
+    // TODO: why do i need position 2 and 3 here?
     var position2 = this.randomPosition();
     var position3 = this.randomPosition();
-    this.asteroids.push(Asteroids.Asteroid.newBigAsteroid({"pos": position1}));
+    this.asteroids.push(Asteroid.newBigAsteroid({"pos": position1}));
   }
   addShip() {
     var position = this.randomPosition();
@@ -33,8 +35,8 @@ class Game {
   }
   allObjects() {
     var allObjectsArray = this.asteroids.slice(0);
-    this.ship && allObjectsArray.unshift(this.ship);
-    allObjectsArray = allObjectsArray.concat(this.bullets);
+    //this.ship && allObjectsArray.unshift(this.ship);
+    //allObjectsArray = allObjectsArray.concat(this.bullets);
     return allObjectsArray;
   }
 
@@ -68,7 +70,7 @@ class Game {
     }
     return pos;
   }
-  checkCollsisions() {
+  checkCollisions() {
     var that = this;
     this.bullets.forEach(function(bullet) {
       that.asteroids.forEach(function(asteroid) {
@@ -103,3 +105,5 @@ class Game {
     this.lives && setTimeout(this.addShip.bind(this), 1000);
   }
 }
+
+export default Game;
