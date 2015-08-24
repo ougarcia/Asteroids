@@ -4,28 +4,26 @@ import Bullet from './bullet';
 
 class Ship extends MovingObject {
   constructor(params) {
-    params['color'] = 'red';
-    params['radius'] = 10;
-    params['vel'] = [0, 0];
+    params.color = 'red';
+    params.radius = 10;
+    params.vel = [0, 0];
     super(params);
     this.bulletAvailable = true;
     this.rotation = 0;
     this.decelerationCounter = 0;
     // FIXME: these upper case instance variables may be redundant and redundant
+    // hahahah
     this.COLOR = params.color;
     this.RADIUS = params.radius;
   }
   power(impulse) {
     if ( Util.norm(this.vel) < 4 ) {
-      this.vel.forEach(function(subVel, idx) {
-        this.vel[idx] +=  impulse[idx] * 0.1;
-      }.bind(this));
+      this.vel = this.vel.map( (subVel, idx) => subVel + impulse[idx] * 0.1 );
     }
   }
   draw() {
-    var ctx = window.Asteroids.ctx;
-    var x = this.pos[0];
-    var y = this.pos[1];
+    const ctx = window.Asteroids.ctx;
+    const [x, y] = this.pos;
     ctx.save();
     ctx.translate(x, y);
     ctx.rotate(this.rotation);
@@ -39,28 +37,23 @@ class Ship extends MovingObject {
     ctx.restore();
   }
   fireBullet() {
-    var that = this;
-    var velocity = Util.unitVector(this.velocityVector());
-    velocity[0] *= 11;
-    velocity[1] *= 11;
-    var bullet = new Bullet({ pos: this.pos, vel: velocity });
+    const velocity = Util.unitVector(this.velocityVector()).map(subVel => {
+      return subVel * 11;
+    });
+    const bullet = new Bullet({ pos: this.pos, vel: velocity });
     window.Asteroids.currentGame.bullets.push(bullet);
     this.bulletAvailable = false;
-    setTimeout(function() {
-      that.bulletAvailable = true;
-    }, 500);
+    setTimeout(() => this.bulletAvailable = true,  500);
   }
   velocityVector() {
+    // vector w/ magnitude 1 that points in the direction the ship is going
     return [Math.sin(this.rotation), -Math.cos(this.rotation)];
   }
   thrust() {
-    var velVector = [Math.sin(this.rotation), -Math.cos(this.rotation)];
     this.power(this.velocityVector());
   }
   brake() {
-    this.vel.forEach(function(subVel, idx) {
-      this.vel[idx] = subVel * 0.97;
-    }.bind(this));
+    this.vel = this.vel.map(subVel => subVel * 0.97);
   }
   rotate(params) {
     this.rotation += Math.PI / 48 * (params.reverse ? 1 : -1);
@@ -79,9 +72,7 @@ class Ship extends MovingObject {
     super.move();
   }
   decelerate() {
-    this.vel.forEach(function(subVel, idx) {
-      this.vel[idx] = subVel * 0.9;
-    }.bind(this));
+    this.vel = this.vel.map(subVel => subVel * 0.9);
   }
 }
 export default Ship;

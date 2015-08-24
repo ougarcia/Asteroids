@@ -549,6 +549,8 @@
 	  value: true
 	});
 
+	var _slicedToArray = (function () { function sliceIterator(arr, i) { var _arr = []; var _n = true; var _d = false; var _e = undefined; try { for (var _i = arr[Symbol.iterator](), _s; !(_n = (_s = _i.next()).done); _n = true) { _arr.push(_s.value); if (i && _arr.length === i) break; } } catch (err) { _d = true; _e = err; } finally { try { if (!_n && _i['return']) _i['return'](); } finally { if (_d) throw _e; } } return _arr; } return function (arr, i) { if (Array.isArray(arr)) { return arr; } else if (Symbol.iterator in Object(arr)) { return sliceIterator(arr, i); } else { throw new TypeError('Invalid attempt to destructure non-iterable instance'); } }; })();
+
 	var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ('value' in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
 
 	var _get = function get(_x, _x2, _x3) { var _again = true; _function: while (_again) { var object = _x, property = _x2, receiver = _x3; desc = parent = getter = undefined; _again = false; if (object === null) object = Function.prototype; var desc = Object.getOwnPropertyDescriptor(object, property); if (desc === undefined) { var parent = Object.getPrototypeOf(object); if (parent === null) { return undefined; } else { _x = parent; _x2 = property; _x3 = receiver; _again = true; continue _function; } } else if ('value' in desc) { return desc.value; } else { var getter = desc.get; if (getter === undefined) { return undefined; } return getter.call(receiver); } } };
@@ -577,14 +579,15 @@
 	  function Ship(params) {
 	    _classCallCheck(this, Ship);
 
-	    params['color'] = 'red';
-	    params['radius'] = 10;
-	    params['vel'] = [0, 0];
+	    params.color = 'red';
+	    params.radius = 10;
+	    params.vel = [0, 0];
 	    _get(Object.getPrototypeOf(Ship.prototype), 'constructor', this).call(this, params);
 	    this.bulletAvailable = true;
 	    this.rotation = 0;
 	    this.decelerationCounter = 0;
 	    // FIXME: these upper case instance variables may be redundant and redundant
+	    // hahahah
 	    this.COLOR = params.color;
 	    this.RADIUS = params.radius;
 	  }
@@ -593,17 +596,21 @@
 	    key: 'power',
 	    value: function power(impulse) {
 	      if (_util2['default'].norm(this.vel) < 4) {
-	        this.vel.forEach((function (subVel, idx) {
-	          this.vel[idx] += impulse[idx] * 0.1;
-	        }).bind(this));
+	        this.vel = this.vel.map(function (subVel, idx) {
+	          return subVel + impulse[idx] * 0.1;
+	        });
 	      }
 	    }
 	  }, {
 	    key: 'draw',
 	    value: function draw() {
 	      var ctx = window.Asteroids.ctx;
-	      var x = this.pos[0];
-	      var y = this.pos[1];
+
+	      var _pos = _slicedToArray(this.pos, 2);
+
+	      var x = _pos[0];
+	      var y = _pos[1];
+
 	      ctx.save();
 	      ctx.translate(x, y);
 	      ctx.rotate(this.rotation);
@@ -619,34 +626,35 @@
 	  }, {
 	    key: 'fireBullet',
 	    value: function fireBullet() {
-	      var that = this;
-	      var velocity = _util2['default'].unitVector(this.velocityVector());
-	      velocity[0] *= 11;
-	      velocity[1] *= 11;
+	      var _this = this;
+
+	      var velocity = _util2['default'].unitVector(this.velocityVector()).map(function (subVel) {
+	        return subVel * 11;
+	      });
 	      var bullet = new _bullet2['default']({ pos: this.pos, vel: velocity });
 	      window.Asteroids.currentGame.bullets.push(bullet);
 	      this.bulletAvailable = false;
 	      setTimeout(function () {
-	        that.bulletAvailable = true;
+	        return _this.bulletAvailable = true;
 	      }, 500);
 	    }
 	  }, {
 	    key: 'velocityVector',
 	    value: function velocityVector() {
+	      // vector w/ magnitude 1 that points in the direction the ship is going
 	      return [Math.sin(this.rotation), -Math.cos(this.rotation)];
 	    }
 	  }, {
 	    key: 'thrust',
 	    value: function thrust() {
-	      var velVector = [Math.sin(this.rotation), -Math.cos(this.rotation)];
 	      this.power(this.velocityVector());
 	    }
 	  }, {
 	    key: 'brake',
 	    value: function brake() {
-	      this.vel.forEach((function (subVel, idx) {
-	        this.vel[idx] = subVel * 0.97;
-	      }).bind(this));
+	      this.vel = this.vel.map(function (subVel) {
+	        return subVel * 0.97;
+	      });
 	    }
 	  }, {
 	    key: 'rotate',
@@ -671,9 +679,9 @@
 	  }, {
 	    key: 'decelerate',
 	    value: function decelerate() {
-	      this.vel.forEach((function (subVel, idx) {
-	        this.vel[idx] = subVel * 0.9;
-	      }).bind(this));
+	      this.vel = this.vel.map(function (subVel) {
+	        return subVel * 0.9;
+	      });
 	    }
 	  }]);
 
