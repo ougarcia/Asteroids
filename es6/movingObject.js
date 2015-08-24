@@ -1,4 +1,3 @@
-
 class MovingObject {
   constructor(params) {
     this.pos = params.pos;
@@ -11,7 +10,6 @@ class MovingObject {
     const ctx = window.Asteroids.ctx;
     ctx.fillStyle = this.color;
     ctx.beginPath();
-
     ctx.arc(
       this.pos[0],
       this.pos[1],

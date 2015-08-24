@@ -319,11 +319,9 @@
 	  function Bullet(params) {
 	    _classCallCheck(this, Bullet);
 
-	    params['color'] = 'red';
-	    params['radius'] = 6;
+	    params.color = 'red';
+	    params.radius = 6;
 	    _get(Object.getPrototypeOf(Bullet.prototype), 'constructor', this).call(this, params);
-	    this.COLOR = params.color;
-	    this.RADIUS = params.radius;
 	    this.isWrappable = false;
 	  }
 
@@ -364,7 +362,6 @@
 	      var ctx = window.Asteroids.ctx;
 	      ctx.fillStyle = this.color;
 	      ctx.beginPath();
-
 	      ctx.arc(this.pos[0], this.pos[1], this.radius, 0, 2 * Math.PI, false);
 
 	      ctx.fill();
@@ -428,25 +425,23 @@
 	      var angle = Math.floor(Math.random() * (Math.PI * 2));
 	      var x = Math.cos(angle) * length;
 	      var y = Math.sin(angle) * length;
+
 	      return [x, y];
 	    }
 	  }, {
 	    key: "norm",
 	    value: function norm(vector) {
-	      var sum = 0;
-	      vector.forEach(function (el) {
-	        sum += el * el;
-	      });
-
+	      var sum = vector.reduce(function (total, el) {
+	        return total + Math.pow(el, 2);
+	      }, 0);
 	      return Math.sqrt(sum);
 	    }
 	  }, {
 	    key: "unitVector",
 	    value: function unitVector(vector) {
-	      var result = [];
 	      var norm = Util.norm(vector);
-	      vector.forEach(function (el) {
-	        result.push(el / norm);
+	      var result = vector.map(function (el) {
+	        return el / norm;
 	      });
 	      return result;
 	    }
@@ -492,25 +487,20 @@
 	  function Asteroid(params) {
 	    _classCallCheck(this, Asteroid);
 
-	    params['color'] = 'blue';
-	    params['radius'] = params.radius || 40;
-	    params['vel'] = _util2['default'].randomVec(Math.floor(Math.random() * 3 + 1));
+	    params.color = 'blue';
+	    params.radius = params.radius || 40;
+	    params.vel = _util2['default'].randomVec(Math.floor(Math.random() * 3 + 1));
 	    _get(Object.getPrototypeOf(Asteroid.prototype), 'constructor', this).call(this, params);
-	    this.RADIUS = params.radius;
 	  }
 
 	  _createClass(Asteroid, [{
 	    key: 'spawnChildren',
 	    value: function spawnChildren() {
-	      var params = {};
-	      params.pos = this.pos;
-	      params.radius = this.RADIUS - 20;
-	      var newAsteroids = [];
-	      if (params.radius > 0) {
-	        for (var i = 0; i < 2; i++) {
-	          newAsteroids.push(new Asteroid(params));
-	        }
-	      }
+	      if (this.radius <= 20) return [];
+	      var params = { pos: this.pos, radius: this.radius - 20 };
+	      var newAsteroids = [0, 0].map(function () {
+	        return new Asteroid(params);
+	      });
 	      return newAsteroids;
 	    }
 	  }], [{
@@ -586,10 +576,6 @@
 	    this.bulletAvailable = true;
 	    this.rotation = 0;
 	    this.decelerationCounter = 0;
-	    // FIXME: these upper case instance variables may be redundant and redundant
-	    // hahahah
-	    this.COLOR = params.color;
-	    this.RADIUS = params.radius;
 	  }
 
 	  _createClass(Ship, [{

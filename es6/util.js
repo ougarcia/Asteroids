@@ -1,25 +1,17 @@
 class Util {
   static randomVec(length) {
-    var angle = Math.floor(Math.random() * (Math.PI * 2));
-    var x = Math.cos(angle) * length;
-    var y = Math.sin(angle) * length;
+    const angle = Math.floor(Math.random() * (Math.PI * 2));
+    const [x, y] = [Math.cos(angle) * length, Math.sin(angle) * length];
     return [x, y];
   }
   static norm(vector) {
-    var sum = 0;
-    vector.forEach(function(el) {
-      sum += (el * el);
-    });
-
+    const sum = vector.reduce((total, el) => total + Math.pow(el, 2), 0);
     return Math.sqrt(sum);
   }
 
   static unitVector(vector) {
-    var result = [];
-    var norm = Util.norm(vector);
-    vector.forEach(function(el) {
-      result.push(el / norm);
-    });
+    const norm = Util.norm(vector);
+    const result = vector.map(el => el / norm);
     return result;
   }
 }

@@ -11,10 +11,6 @@ class Ship extends MovingObject {
     this.bulletAvailable = true;
     this.rotation = 0;
     this.decelerationCounter = 0;
-    // FIXME: these upper case instance variables may be redundant and redundant
-    // hahahah
-    this.COLOR = params.color;
-    this.RADIUS = params.radius;
   }
   power(impulse) {
     if ( Util.norm(this.vel) < 4 ) {

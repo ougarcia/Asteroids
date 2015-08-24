@@ -3,22 +3,15 @@ import MovingObject from './movingObject';
 
 class Asteroid extends MovingObject {
   constructor(params) {
-    params['color'] = 'blue';
-    params['radius'] = params.radius || 40;
-    params['vel'] = Util.randomVec(Math.floor(Math.random() * 3 + 1));
+    params.color = 'blue';
+    params.radius = params.radius || 40;
+    params.vel = Util.randomVec(Math.floor(Math.random() * 3 + 1));
     super(params);
-    this.RADIUS = params.radius;
   }
   spawnChildren() {
-    var params = {};
-    params.pos = this.pos;
-    params.radius = this.RADIUS - 20;
-    var newAsteroids = [];
-    if (params.radius > 0 ) {
-      for (var i = 0; i < 2; i++) {
-        newAsteroids.push(new Asteroid(params));
-      }
-    }
+    if (this.radius <= 20) return [];
+    const params = { pos: this.pos, radius: this.radius - 20 };
+    const newAsteroids = [0, 0].map(() => new Asteroid(params));
     return newAsteroids;
   }
   static newBigAsteroid(params) {
