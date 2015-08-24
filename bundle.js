@@ -346,13 +346,20 @@
 	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 	var MovingObject = (function () {
-	  function MovingObject(params) {
+	  function MovingObject(_ref) {
+	    var pos = _ref.pos;
+	    var vel = _ref.vel;
+	    var radius = _ref.radius;
+	    var color = _ref.color;
+
 	    _classCallCheck(this, MovingObject);
 
-	    this.pos = params.pos;
-	    this.vel = params.vel;
-	    this.radius = params.radius;
-	    this.color = params.color;
+	    var _ref2 = [pos, vel, radius, color];
+	    this.pos = _ref2[0];
+	    this.vel = _ref2[1];
+	    this.radius = _ref2[2];
+	    this.color = _ref2[3];
+
 	    this.isWrappable = true;
 	  }
 
@@ -369,21 +376,21 @@
 	  }, {
 	    key: "move",
 	    value: function move() {
-	      var newPosition = [];
-	      for (var i = 0; i < 2; i++) {
-	        newPosition[i] = this.pos[i] + this.vel[i];
-	      }
+	      var _this = this;
 
+	      var newPosition = this.pos.map(function (pos, i) {
+	        return pos + _this.vel[i];
+	      });
 	      this.pos = window.Asteroids.currentGame.wrap(newPosition, this);
 	    }
 	  }, {
 	    key: "isCollidedWith",
 	    value: function isCollidedWith(otherObject) {
-	      var _this = this;
+	      var _this2 = this;
 
 	      // find vector from center of this object to center of other object
 	      var vectDif = [0, 1].map(function (i) {
-	        return _this.pos[i] - otherObject.pos[i];
+	        return _this2.pos[i] - otherObject.pos[i];
 	      });
 	      // find that vector's magnitude
 	      var magDif = Math.sqrt(vectDif.reduce(function (total, el) {

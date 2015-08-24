@@ -1,9 +1,6 @@
 class MovingObject {
-  constructor(params) {
-    this.pos = params.pos;
-    this.vel = params.vel;
-    this.radius = params.radius;
-    this.color = params.color;
+  constructor({pos, vel, radius, color}) {
+    [this.pos, this.vel, this.radius, this.color] = [pos, vel, radius, color];
     this.isWrappable = true;
   }
   draw() {
@@ -22,11 +19,7 @@ class MovingObject {
     ctx.fill();
   }
   move() {
-    const newPosition = [];
-    for (let i = 0; i < 2; i++) {
-      newPosition[i] = this.pos[i] + this.vel[i];
-    }
-
+    const newPosition = this.pos.map((pos, i) => pos + this.vel[i]);
     this.pos = window.Asteroids.currentGame.wrap(newPosition, this);
   }
   isCollidedWith(otherObject) {
