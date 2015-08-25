@@ -56,9 +56,15 @@ class Game {
     this.allObjects().forEach( object => object.draw(this.ctx) );
   }
   drawLives() {
-    this.ctx.fillStyle = 'Black';
-    this.ctx.font = '48px serif';
-    this.ctx.fillText(`${this.lives} lives`, 0, 50);
+    let [x, y] = [5, 5];
+    const img = new Image();
+    img.src = "ship.svg";
+    for (let i = 0; i < this.lives; i++) {
+      this.ctx.beginPath();
+      this.ctx.drawImage(img, x, y, 20, 40);
+      this.ctx.closePath();
+      x += 30;
+    }
   }
   moveObjects() {
     this.allObjects().forEach( object => object.move() );

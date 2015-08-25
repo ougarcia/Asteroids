@@ -237,9 +237,17 @@
 	  }, {
 	    key: 'drawLives',
 	    value: function drawLives() {
-	      this.ctx.fillStyle = 'Black';
-	      this.ctx.font = '48px serif';
-	      this.ctx.fillText(this.lives + ' lives', 0, 50);
+	      var x = 5;
+	      var y = 5;
+
+	      var img = new Image();
+	      img.src = "ship.svg";
+	      for (var i = 0; i < this.lives; i++) {
+	        this.ctx.beginPath();
+	        this.ctx.drawImage(img, x, y, 20, 40);
+	        this.ctx.closePath();
+	        x += 30;
+	      }
 	    }
 	  }, {
 	    key: 'moveObjects',
@@ -607,10 +615,6 @@
 	      var img = new Image();
 	      img.src = "ship.svg";
 	      ctx.drawImage(img, -this.radius, -this.radius * 2, this.radius * 2, this.radius * 4);
-	      //ctx.moveTo(0, -20);
-	      //ctx.lineTo(-10, 20);
-	      //ctx.lineTo(10, 20);
-	      //ctx.fill();
 	      ctx.closePath();
 	      ctx.restore();
 	    }

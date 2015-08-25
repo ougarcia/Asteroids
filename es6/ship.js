@@ -34,10 +34,6 @@ class Ship extends MovingObject {
       this.radius * 2,
       this.radius * 4
     );
-    //ctx.moveTo(0, -20);
-    //ctx.lineTo(-10, 20);
-    //ctx.lineTo(10, 20);
-    //ctx.fill();
     ctx.closePath();
     ctx.restore();
   }
