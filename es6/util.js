@@ -8,7 +8,6 @@ class Util {
     const sum = vector.reduce((total, el) => total + Math.pow(el, 2), 0);
     return Math.sqrt(sum);
   }
-
   static unitVector(vector) {
     const norm = Util.norm(vector);
     const result = vector.map(el => el / norm);

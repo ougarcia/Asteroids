@@ -1,5 +1,6 @@
 import Asteroid from './asteroid';
 import Ship from './ship';
+import Star from './star';
 
 class Game {
   constructor(xDim, yDim) {
@@ -10,15 +11,18 @@ class Game {
     this.DIM_Y = yDim;
     this.asteroids = [];
     this.bullets = [];
+    this.stars = [];
+    this.addStars();
     for (let i = 0; i < this.NUM_ASTEROIDS; i++) {
       this.addAsteroids();
     }
     this.addShip();
   }
   randomPosition() {
-    const x = Math.floor(Math.random() * this.DIM_X);
-    const y = Math.floor(Math.random() * this.DIM_Y);
-    return [x, y];
+    const pos = [this.DIM_X, this.DIM_Y].map(dim => {
+      return Math.floor(Math.random() * dim);
+    });
+    return pos;
   }
   addAsteroids() {
     const position1 = this.randomPosition();
@@ -28,16 +32,32 @@ class Game {
     const position = this.randomPosition();
     this.ship = new Ship({ 'pos': position });
   }
+  addStars() {
+    const starCount = 30;
+    for (let i = 0; i < starCount; i++) {
+      const pos = this.randomPosition();
+      this.stars.push(new Star(pos));
+    }
+  }
   allObjects() {
-    const allObjectsArr = [...this.asteroids, ...this.bullets];
+    const allObjectsArr = [...this.stars, ...this.asteroids, ...this.bullets];
     if (this.ship) allObjectsArr.unshift(this.ship);
     return allObjectsArr;
   }
-
+  backgroundFill() {
+    this.ctx.fillStyle = '#283642';
+    this.ctx.fillRect(0, 0, this.DIM_X, this.DIM_Y);
+    this.ctx.strokeStyle = "#283642";
+  }
   draw() {
     this.ctx.clearRect(0, 0, this.DIM_X, this.DIM_Y);
+    this.backgroundFill();
+    //this.drawStars();
     this.drawLives();
     this.allObjects().forEach( object => object.draw(this.ctx) );
+  }
+  drawStars() {
+    this.stars.forEach(star => star.draw());
   }
   drawLives() {
     this.ctx.fillStyle = 'Black';

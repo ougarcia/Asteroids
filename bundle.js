@@ -148,13 +148,17 @@
 
 	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } }
 
-	var _asteroid = __webpack_require__(6);
+	var _asteroid = __webpack_require__(3);
 
 	var _asteroid2 = _interopRequireDefault(_asteroid);
 
-	var _ship = __webpack_require__(7);
+	var _ship = __webpack_require__(6);
 
 	var _ship2 = _interopRequireDefault(_ship);
+
+	var _star = __webpack_require__(8);
+
+	var _star2 = _interopRequireDefault(_star);
 
 	var Game = (function () {
 	  function Game(xDim, yDim) {
@@ -167,6 +171,8 @@
 	    this.DIM_Y = yDim;
 	    this.asteroids = [];
 	    this.bullets = [];
+	    this.stars = [];
+	    this.addStars();
 	    for (var i = 0; i < this.NUM_ASTEROIDS; i++) {
 	      this.addAsteroids();
 	    }
@@ -176,9 +182,10 @@
 	  _createClass(Game, [{
 	    key: 'randomPosition',
 	    value: function randomPosition() {
-	      var x = Math.floor(Math.random() * this.DIM_X);
-	      var y = Math.floor(Math.random() * this.DIM_Y);
-	      return [x, y];
+	      var pos = [this.DIM_X, this.DIM_Y].map(function (dim) {
+	        return Math.floor(Math.random() * dim);
+	      });
+	      return pos;
 	    }
 	  }, {
 	    key: 'addAsteroids',
@@ -193,11 +200,27 @@
 	      this.ship = new _ship2['default']({ 'pos': position });
 	    }
 	  }, {
+	    key: 'addStars',
+	    value: function addStars() {
+	      var starCount = 30;
+	      for (var i = 0; i < starCount; i++) {
+	        var pos = this.randomPosition();
+	        this.stars.push(new _star2['default'](pos));
+	      }
+	    }
+	  }, {
 	    key: 'allObjects',
 	    value: function allObjects() {
-	      var allObjectsArr = [].concat(_toConsumableArray(this.asteroids), _toConsumableArray(this.bullets));
+	      var allObjectsArr = [].concat(_toConsumableArray(this.stars), _toConsumableArray(this.asteroids), _toConsumableArray(this.bullets));
 	      if (this.ship) allObjectsArr.unshift(this.ship);
 	      return allObjectsArr;
+	    }
+	  }, {
+	    key: 'backgroundFill',
+	    value: function backgroundFill() {
+	      this.ctx.fillStyle = '#283642';
+	      this.ctx.fillRect(0, 0, this.DIM_X, this.DIM_Y);
+	      this.ctx.strokeStyle = "#283642";
 	    }
 	  }, {
 	    key: 'draw',
@@ -205,9 +228,18 @@
 	      var _this = this;
 
 	      this.ctx.clearRect(0, 0, this.DIM_X, this.DIM_Y);
+	      this.backgroundFill();
+	      //this.drawStars();
 	      this.drawLives();
 	      this.allObjects().forEach(function (object) {
 	        return object.draw(_this.ctx);
+	      });
+	    }
+	  }, {
+	    key: 'drawStars',
+	    value: function drawStars() {
+	      this.stars.forEach(function (star) {
+	        return star.draw();
 	      });
 	    }
 	  }, {
@@ -301,6 +333,8 @@
 	  value: true
 	});
 
+	var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ('value' in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
+
 	var _get = function get(_x, _x2, _x3) { var _again = true; _function: while (_again) { var object = _x, property = _x2, receiver = _x3; desc = parent = getter = undefined; _again = false; if (object === null) object = Function.prototype; var desc = Object.getOwnPropertyDescriptor(object, property); if (desc === undefined) { var parent = Object.getPrototypeOf(object); if (parent === null) { return undefined; } else { _x = parent; _x2 = property; _x3 = receiver; _again = true; continue _function; } } else if ('value' in desc) { return desc.value; } else { var getter = desc.get; if (getter === undefined) { return undefined; } return getter.call(receiver); } } };
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
@@ -309,30 +343,129 @@
 
 	function _inherits(subClass, superClass) { if (typeof superClass !== 'function' && superClass !== null) { throw new TypeError('Super expression must either be null or a function, not ' + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
-	var _movingObject = __webpack_require__(4);
+	var _util = __webpack_require__(4);
+
+	var _util2 = _interopRequireDefault(_util);
+
+	var _movingObject = __webpack_require__(5);
 
 	var _movingObject2 = _interopRequireDefault(_movingObject);
 
-	var Bullet = (function (_MovingObject) {
-	  _inherits(Bullet, _MovingObject);
+	var Asteroid = (function (_MovingObject) {
+	  _inherits(Asteroid, _MovingObject);
 
-	  function Bullet(params) {
-	    _classCallCheck(this, Bullet);
+	  function Asteroid(params) {
+	    _classCallCheck(this, Asteroid);
 
-	    params.color = 'red';
-	    params.radius = 6;
-	    _get(Object.getPrototypeOf(Bullet.prototype), 'constructor', this).call(this, params);
-	    this.isWrappable = false;
+	    params.color = '#7A7371';
+	    params.radius = params.radius || 40;
+	    params.vel = _util2['default'].randomVec(Math.floor(Math.random() * 3 + 1));
+	    _get(Object.getPrototypeOf(Asteroid.prototype), 'constructor', this).call(this, params);
 	  }
 
-	  return Bullet;
+	  _createClass(Asteroid, [{
+	    key: 'spawnChildren',
+	    value: function spawnChildren() {
+	      if (this.radius <= 20) return [];
+	      var params = { pos: this.pos, radius: this.radius - 20 };
+	      var newAsteroids = [0, 0].map(function () {
+	        return new Asteroid(params);
+	      });
+	      return newAsteroids;
+	    }
+	  }, {
+	    key: 'draw',
+	    value: function draw() {
+	      _get(Object.getPrototypeOf(Asteroid.prototype), 'draw', this).call(this);
+	      var ctx = window.Asteroids.ctx;
+	      ctx.beginPath();
+	      var img = new Image();
+	      img.src = "asteroid.png";
+	      var x = this.pos[0] - this.radius;
+	      var y = this.pos[1] - this.radius;
+	      ctx.drawImage(img, x, y, this.radius * 2, this.radius * 2);
+	    }
+	  }], [{
+	    key: 'newBigAsteroid',
+	    value: function newBigAsteroid(params) {
+	      params.radius = 60;
+	      return new Asteroid(params);
+	    }
+	  }, {
+	    key: 'newMediumAsteroid',
+	    value: function newMediumAsteroid(params) {
+	      params.radius = 40;
+	      return new Asteroid(params);
+	    }
+	  }, {
+	    key: 'newSmallAsteroid',
+	    value: function newSmallAsteroid(params) {
+	      params.radius = 20;
+	      return new Asteroid(params);
+	    }
+	  }]);
+
+	  return Asteroid;
 	})(_movingObject2['default']);
 
-	exports['default'] = Bullet;
+	exports['default'] = Asteroid;
 	module.exports = exports['default'];
 
 /***/ },
 /* 4 */
+/***/ function(module, exports) {
+
+	"use strict";
+
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+
+	var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
+
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+	var Util = (function () {
+	  function Util() {
+	    _classCallCheck(this, Util);
+	  }
+
+	  _createClass(Util, null, [{
+	    key: "randomVec",
+	    value: function randomVec(length) {
+	      var angle = Math.floor(Math.random() * (Math.PI * 2));
+	      var x = Math.cos(angle) * length;
+	      var y = Math.sin(angle) * length;
+
+	      return [x, y];
+	    }
+	  }, {
+	    key: "norm",
+	    value: function norm(vector) {
+	      var sum = vector.reduce(function (total, el) {
+	        return total + Math.pow(el, 2);
+	      }, 0);
+	      return Math.sqrt(sum);
+	    }
+	  }, {
+	    key: "unitVector",
+	    value: function unitVector(vector) {
+	      var norm = Util.norm(vector);
+	      var result = vector.map(function (el) {
+	        return el / norm;
+	      });
+	      return result;
+	    }
+	  }]);
+
+	  return Util;
+	})();
+
+	exports["default"] = Util;
+	module.exports = exports["default"];
+
+/***/ },
+/* 5 */
 /***/ function(module, exports) {
 
 	"use strict";
@@ -408,136 +541,7 @@
 	module.exports = exports["default"];
 
 /***/ },
-/* 5 */
-/***/ function(module, exports) {
-
-	"use strict";
-
-	Object.defineProperty(exports, "__esModule", {
-	  value: true
-	});
-
-	var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
-
-	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-	var Util = (function () {
-	  function Util() {
-	    _classCallCheck(this, Util);
-	  }
-
-	  _createClass(Util, null, [{
-	    key: "randomVec",
-	    value: function randomVec(length) {
-	      var angle = Math.floor(Math.random() * (Math.PI * 2));
-	      var x = Math.cos(angle) * length;
-	      var y = Math.sin(angle) * length;
-
-	      return [x, y];
-	    }
-	  }, {
-	    key: "norm",
-	    value: function norm(vector) {
-	      var sum = vector.reduce(function (total, el) {
-	        return total + Math.pow(el, 2);
-	      }, 0);
-	      return Math.sqrt(sum);
-	    }
-	  }, {
-	    key: "unitVector",
-	    value: function unitVector(vector) {
-	      var norm = Util.norm(vector);
-	      var result = vector.map(function (el) {
-	        return el / norm;
-	      });
-	      return result;
-	    }
-	  }]);
-
-	  return Util;
-	})();
-
-	exports["default"] = Util;
-	module.exports = exports["default"];
-
-/***/ },
 /* 6 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-
-	Object.defineProperty(exports, '__esModule', {
-	  value: true
-	});
-
-	var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ('value' in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
-
-	var _get = function get(_x, _x2, _x3) { var _again = true; _function: while (_again) { var object = _x, property = _x2, receiver = _x3; desc = parent = getter = undefined; _again = false; if (object === null) object = Function.prototype; var desc = Object.getOwnPropertyDescriptor(object, property); if (desc === undefined) { var parent = Object.getPrototypeOf(object); if (parent === null) { return undefined; } else { _x = parent; _x2 = property; _x3 = receiver; _again = true; continue _function; } } else if ('value' in desc) { return desc.value; } else { var getter = desc.get; if (getter === undefined) { return undefined; } return getter.call(receiver); } } };
-
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
-
-	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } }
-
-	function _inherits(subClass, superClass) { if (typeof superClass !== 'function' && superClass !== null) { throw new TypeError('Super expression must either be null or a function, not ' + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
-
-	var _util = __webpack_require__(5);
-
-	var _util2 = _interopRequireDefault(_util);
-
-	var _movingObject = __webpack_require__(4);
-
-	var _movingObject2 = _interopRequireDefault(_movingObject);
-
-	var Asteroid = (function (_MovingObject) {
-	  _inherits(Asteroid, _MovingObject);
-
-	  function Asteroid(params) {
-	    _classCallCheck(this, Asteroid);
-
-	    params.color = 'blue';
-	    params.radius = params.radius || 40;
-	    params.vel = _util2['default'].randomVec(Math.floor(Math.random() * 3 + 1));
-	    _get(Object.getPrototypeOf(Asteroid.prototype), 'constructor', this).call(this, params);
-	  }
-
-	  _createClass(Asteroid, [{
-	    key: 'spawnChildren',
-	    value: function spawnChildren() {
-	      if (this.radius <= 20) return [];
-	      var params = { pos: this.pos, radius: this.radius - 20 };
-	      var newAsteroids = [0, 0].map(function () {
-	        return new Asteroid(params);
-	      });
-	      return newAsteroids;
-	    }
-	  }], [{
-	    key: 'newBigAsteroid',
-	    value: function newBigAsteroid(params) {
-	      params.radius = 60;
-	      return new Asteroid(params);
-	    }
-	  }, {
-	    key: 'newMediumAsteroid',
-	    value: function newMediumAsteroid(params) {
-	      params.radius = 40;
-	      return new Asteroid(params);
-	    }
-	  }, {
-	    key: 'newSmallAsteroid',
-	    value: function newSmallAsteroid(params) {
-	      params.radius = 20;
-	      return new Asteroid(params);
-	    }
-	  }]);
-
-	  return Asteroid;
-	})(_movingObject2['default']);
-
-	exports['default'] = Asteroid;
-	module.exports = exports['default'];
-
-/***/ },
-/* 7 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -558,15 +562,15 @@
 
 	function _inherits(subClass, superClass) { if (typeof superClass !== 'function' && superClass !== null) { throw new TypeError('Super expression must either be null or a function, not ' + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
-	var _util = __webpack_require__(5);
+	var _util = __webpack_require__(4);
 
 	var _util2 = _interopRequireDefault(_util);
 
-	var _movingObject = __webpack_require__(4);
+	var _movingObject = __webpack_require__(5);
 
 	var _movingObject2 = _interopRequireDefault(_movingObject);
 
-	var _bullet = __webpack_require__(3);
+	var _bullet = __webpack_require__(7);
 
 	var _bullet2 = _interopRequireDefault(_bullet);
 
@@ -682,6 +686,106 @@
 	})(_movingObject2['default']);
 
 	exports['default'] = Ship;
+	module.exports = exports['default'];
+
+/***/ },
+/* 7 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	Object.defineProperty(exports, '__esModule', {
+	  value: true
+	});
+
+	var _get = function get(_x, _x2, _x3) { var _again = true; _function: while (_again) { var object = _x, property = _x2, receiver = _x3; desc = parent = getter = undefined; _again = false; if (object === null) object = Function.prototype; var desc = Object.getOwnPropertyDescriptor(object, property); if (desc === undefined) { var parent = Object.getPrototypeOf(object); if (parent === null) { return undefined; } else { _x = parent; _x2 = property; _x3 = receiver; _again = true; continue _function; } } else if ('value' in desc) { return desc.value; } else { var getter = desc.get; if (getter === undefined) { return undefined; } return getter.call(receiver); } } };
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
+
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } }
+
+	function _inherits(subClass, superClass) { if (typeof superClass !== 'function' && superClass !== null) { throw new TypeError('Super expression must either be null or a function, not ' + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+	var _movingObject = __webpack_require__(5);
+
+	var _movingObject2 = _interopRequireDefault(_movingObject);
+
+	var Bullet = (function (_MovingObject) {
+	  _inherits(Bullet, _MovingObject);
+
+	  function Bullet(params) {
+	    _classCallCheck(this, Bullet);
+
+	    params.color = 'red';
+	    params.radius = 6;
+	    _get(Object.getPrototypeOf(Bullet.prototype), 'constructor', this).call(this, params);
+	    this.isWrappable = false;
+	  }
+
+	  return Bullet;
+	})(_movingObject2['default']);
+
+	exports['default'] = Bullet;
+	module.exports = exports['default'];
+
+/***/ },
+/* 8 */
+/***/ function(module, exports) {
+
+	'use strict';
+
+	Object.defineProperty(exports, '__esModule', {
+	  value: true
+	});
+
+	var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ('value' in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
+
+	function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr2 = Array(arr.length); i < arr.length; i++) arr2[i] = arr[i]; return arr2; } else { return Array.from(arr); } }
+
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } }
+
+	var Star = (function () {
+	  function Star(pos) {
+	    _classCallCheck(this, Star);
+
+	    this.pos = pos;
+	    this.color = 'white';
+	    this.radius = this.randomRadius();
+	    setInterval(this.changeRadius.bind(this), 100);
+	  }
+
+	  _createClass(Star, [{
+	    key: 'changeRadius',
+	    value: function changeRadius() {
+	      this.radius = this.randomRadius();
+	    }
+	  }, {
+	    key: 'randomRadius',
+	    value: function randomRadius() {
+	      return Math.random() * 4;
+	    }
+	  }, {
+	    key: 'move',
+	    value: function move() {
+	      //do nothing, this is just to make the code in game cleaner
+	      return null;
+	    }
+	  }, {
+	    key: 'draw',
+	    value: function draw() {
+	      var ctx = window.Asteroids.ctx;
+	      ctx.fillStyle = 'white';
+	      ctx.beginPath();
+	      // ctx.arc(x, y, radius, startAngle, endAngle, anticlockwise);
+	      ctx.arc.apply(ctx, _toConsumableArray(this.pos).concat([this.radius, 0, 2 * Math.PI, false]));
+	      ctx.fill();
+	    }
+	  }]);
+
+	  return Star;
+	})();
+
+	exports['default'] = Star;
 	module.exports = exports['default'];
 
 /***/ }
