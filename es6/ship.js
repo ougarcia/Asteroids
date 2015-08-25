@@ -5,7 +5,7 @@ import Bullet from './bullet';
 class Ship extends MovingObject {
   constructor(params) {
     params.color = 'red';
-    params.radius = 10;
+    params.radius = 20;
     params.vel = [0, 0];
     super(params);
     this.bulletAvailable = true;
@@ -25,10 +25,19 @@ class Ship extends MovingObject {
     ctx.rotate(this.rotation);
     ctx.fillStyle = this.color;
     ctx.beginPath();
-    ctx.moveTo(0, -20);
-    ctx.lineTo(-10, 20);
-    ctx.lineTo(10, 20);
-    ctx.fill();
+    const img = new Image();
+    img.src = "ship.svg";
+    ctx.drawImage(
+      img,
+      -this.radius,
+      -this.radius * 2,
+      this.radius * 2,
+      this.radius * 4
+    );
+    //ctx.moveTo(0, -20);
+    //ctx.lineTo(-10, 20);
+    //ctx.lineTo(10, 20);
+    //ctx.fill();
     ctx.closePath();
     ctx.restore();
   }

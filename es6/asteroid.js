@@ -15,7 +15,6 @@ class Asteroid extends MovingObject {
     return newAsteroids;
   }
   draw() {
-    super.draw();
     const ctx = window.Asteroids.ctx;
     ctx.beginPath();
     const img = new Image();

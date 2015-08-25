@@ -229,17 +229,9 @@
 
 	      this.ctx.clearRect(0, 0, this.DIM_X, this.DIM_Y);
 	      this.backgroundFill();
-	      //this.drawStars();
 	      this.drawLives();
 	      this.allObjects().forEach(function (object) {
 	        return object.draw(_this.ctx);
-	      });
-	    }
-	  }, {
-	    key: 'drawStars',
-	    value: function drawStars() {
-	      this.stars.forEach(function (star) {
-	        return star.draw();
 	      });
 	    }
 	  }, {
@@ -376,7 +368,6 @@
 	  }, {
 	    key: 'draw',
 	    value: function draw() {
-	      _get(Object.getPrototypeOf(Asteroid.prototype), 'draw', this).call(this);
 	      var ctx = window.Asteroids.ctx;
 	      ctx.beginPath();
 	      var img = new Image();
@@ -581,7 +572,7 @@
 	    _classCallCheck(this, Ship);
 
 	    params.color = 'red';
-	    params.radius = 10;
+	    params.radius = 20;
 	    params.vel = [0, 0];
 	    _get(Object.getPrototypeOf(Ship.prototype), 'constructor', this).call(this, params);
 	    this.bulletAvailable = true;
@@ -613,10 +604,13 @@
 	      ctx.rotate(this.rotation);
 	      ctx.fillStyle = this.color;
 	      ctx.beginPath();
-	      ctx.moveTo(0, -20);
-	      ctx.lineTo(-10, 20);
-	      ctx.lineTo(10, 20);
-	      ctx.fill();
+	      var img = new Image();
+	      img.src = "ship.svg";
+	      ctx.drawImage(img, -this.radius, -this.radius * 2, this.radius * 2, this.radius * 4);
+	      //ctx.moveTo(0, -20);
+	      //ctx.lineTo(-10, 20);
+	      //ctx.lineTo(10, 20);
+	      //ctx.fill();
 	      ctx.closePath();
 	      ctx.restore();
 	    }
@@ -767,7 +761,7 @@
 	  }, {
 	    key: 'move',
 	    value: function move() {
-	      //do nothing, this is just to make the code in game cleaner
+	      //do nothing, this is just to make the code in game.js cleaner
 	      return null;
 	    }
 	  }, {

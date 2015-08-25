@@ -40,7 +40,7 @@ class Game {
     }
   }
   allObjects() {
-    const allObjectsArr = [...this.stars, ...this.asteroids, ...this.bullets];
+    let allObjectsArr = [...this.stars, ...this.asteroids, ...this.bullets];
     if (this.ship) allObjectsArr.unshift(this.ship);
     return allObjectsArr;
   }
@@ -52,12 +52,8 @@ class Game {
   draw() {
     this.ctx.clearRect(0, 0, this.DIM_X, this.DIM_Y);
     this.backgroundFill();
-    //this.drawStars();
     this.drawLives();
     this.allObjects().forEach( object => object.draw(this.ctx) );
-  }
-  drawStars() {
-    this.stars.forEach(star => star.draw());
   }
   drawLives() {
     this.ctx.fillStyle = 'Black';
