@@ -212,7 +212,7 @@
 	    key: 'allObjects',
 	    value: function allObjects() {
 	      var allObjectsArr = [].concat(_toConsumableArray(this.stars), _toConsumableArray(this.asteroids), _toConsumableArray(this.bullets));
-	      if (this.ship) allObjectsArr.unshift(this.ship);
+	      if (this.ship) allObjectsArr.push(this.ship);
 	      return allObjectsArr;
 	    }
 	  }, {

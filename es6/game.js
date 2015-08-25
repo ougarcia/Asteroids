@@ -41,7 +41,7 @@ class Game {
   }
   allObjects() {
     let allObjectsArr = [...this.stars, ...this.asteroids, ...this.bullets];
-    if (this.ship) allObjectsArr.unshift(this.ship);
+    if (this.ship) allObjectsArr.push(this.ship);
     return allObjectsArr;
   }
   backgroundFill() {
