@@ -11,7 +11,16 @@ class Asteroid extends MovingObject {
   spawnChildren() {
     if (this.radius <= 20) return [];
     const params = { pos: this.pos, radius: this.radius - 20 };
-    const newAsteroids = [0, 0].map(() => new Asteroid(params));
+    //const newAsteroids = [0, 0].map(() => new Asteroid(params));
+    let newAsteroids = [];
+    // this is dumb but javascript [] === [] is stupid
+    let vels = [];
+    while (newAsteroids.length < 2) {
+      const can = new Asteroid(params);
+      if (vels.filter(vel => Util.areSameVectors(vel, can.vel)).length === 0) {
+        newAsteroids.push(can);
+      }
+    }
     return newAsteroids;
   }
   draw() {

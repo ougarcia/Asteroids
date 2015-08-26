@@ -13,6 +13,12 @@ class Util {
     const result = vector.map(el => el / norm);
     return result;
   }
+  static areSameVectors(v1, v2) {
+    for (let [idx, el] of v2.entries()) {
+      if (el !== v2[idx]) return false;
+    }
+    return true;
+  }
 }
 
 export default Util;

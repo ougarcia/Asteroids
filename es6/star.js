@@ -12,7 +12,7 @@ class Star {
     return (Math.random() * 4);
   }
   move() {
-    //do nothing, this is just to make the code in game.js cleaner
+    // do nothing, this is just to make the code in game.js cleaner
     return null;
   }
   draw() {
